@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SurplusHub Lite - One File Version</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    .hidden { display: none; }
+  </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center p-6">
+  <h1 class="text-3xl font-bold text-blue-600 mb-6">SurplusHub Lite</h1>
+
+  <div id="add-item-section" class="bg-white p-6 rounded shadow-md w-full max-w-md mb-6">
+    <h2 class="text-xl font-bold mb-4">Add Surplus Item</h2>
+    <form id="item-form">
+      <input type="text" id="name" placeholder="Item Name" required class="border p-2 w-full mb-4">
+      <input type="number" id="price" placeholder="Price" required class="border p-2 w-full mb-4">
+      <input type="number" id="quantity" placeholder="Quantity" required class="border p-2 w-full mb-4">
+      <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded w-full hover:bg-green-600">Add Item</button>
+    </form>
+  </div>
+
+  <button id="view-items-btn" class="bg-blue-500 text-white px-4 py-2 rounded mb-6 hover:bg-blue-600">View Surplus Items</button>
+
+  <div id="item-list" class="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-xl hidden"></div>
+
+  <script>
+    const itemForm = document.getElementById('item-form');
+    const itemList = document.getElementById('item-list');
+    const viewItemsBtn = document.getElementById('view-items-btn');
+
+    itemForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value;
+      const price = document.getElementById('price').value;
+      const quantity = document.getElementById('quantity').value;
+
+      const newItem = { name, price, quantity };
+
+      let items = JSON.parse(localStorage.getItem('surplusItems')) || [];
+      items.push(newItem);
+      localStorage.setItem('surplusItems', JSON.stringify(items));
+
+      alert('Item Added Successfully!');
+      itemForm.reset();
+    });
+
+    viewItemsBtn.addEventListener('click', function() {
+      itemList.innerHTML = '';
+      let items = JSON.parse(localStorage.getItem('surplusItems')) || [];
+
+      if (items.length === 0) {
+        itemList.innerHTML = '<p class="text-gray-600">No Surplus Items Available</p>';
+      } else {
+        items.forEach(item => {
+          itemList.innerHTML += `
+            <div class="bg-white p-4 rounded shadow">
+              <h2 class="text-xl font-bold">${item.name}</h2>
+              <p>Price: ₹${item.price}</p>
+              <p>Quantity: ${item.quantity}</p>
+            </div>`;
+        });
+      }
+
+      itemList.classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>
