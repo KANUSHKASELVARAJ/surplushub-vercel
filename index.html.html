@@ -53,17 +53,26 @@
       if (items.length === 0) {
         itemList.innerHTML = '<p class="text-gray-600">No Surplus Items Available</p>';
       } else {
-        items.forEach(item => {
-          itemList.innerHTML += `
-            <div class="bg-white p-4 rounded shadow">
-              <h2 class="text-xl font-bold">${item.name}</h2>
-              <p>Price: ₹${item.price}</p>
-              <p>Quantity: ${item.quantity}</p>
-            </div>`;
-        });
+        items.forEach((item, index) => {
+  itemList.innerHTML += `
+    <div class="bg-white p-4 rounded shadow">
+      <h2 class="text-xl font-bold">${item.name}</h2>
+      <p>Price: ₹${item.price}</p>
+      <p>Quantity: ${item.quantity}</p>
+      <button onclick="deleteItem(${index})" class="mt-2 bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Delete</button>
+    </div>`;
+});
       }
 
       itemList.classList.remove('hidden');
+function deleteItem(index) {
+  let items = JSON.parse(localStorage.getItem('surplusItems')) || [];
+  items.splice(index, 1);  // Remove item from array
+  localStorage.setItem('surplusItems', JSON.stringify(items));  // Update LocalStorage
+  alert('Item Deleted!');
+  location.reload();  // Refresh the page to update UI
+}
+
     });
   </script>
 </body>
